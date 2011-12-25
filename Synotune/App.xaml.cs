@@ -44,5 +44,12 @@ namespace Synotune
             //page.Context = collection.Key;
             Window.Current.Content = page;
         }
+
+        internal static void ShowArtistSearchResults(System.Collections.Generic.IEnumerable<SynoItem> items)
+        {
+            var viewModel = new ArtistSearchResultsViewModel(items);
+            var page = new ArtistSearchResults(viewModel);
+            Window.Current.Content = page;
+        }
     }
 }

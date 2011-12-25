@@ -32,7 +32,8 @@ namespace Synotune
             // if artist is selected
             this.session.SearchArtist("tom waits" ,(items) => 
                 {
-                    
+                    // todo : use an injected service instead.
+                    App.ShowArtistSearchResults(items);
                 }
             ,null);
         }

@@ -42,6 +42,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ArtistSearchResultsViewModel.cs" />
     <Compile Include="Behaviors\CharmDiscardedByPointerPressedEventToCommandBehavior.cs" />
     <Compile Include="Behaviors\LoadingDefaultSettingsEventToCommandBehavior.cs" />
     <Compile Include="Behaviors\TextBoxHelper.cs" />

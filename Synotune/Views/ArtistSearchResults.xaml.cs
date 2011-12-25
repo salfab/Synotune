@@ -17,6 +17,12 @@ namespace Synotune.Views
             InitializeComponent();
         }
 
+        public ArtistSearchResults(ArtistSearchResultsViewModel viewModel)
+        {
+            // TODO: Complete member initialization
+            this.DataContext = viewModel;
+        }
+
         void BackButton_Click(object sender, RoutedEventArgs e)
         {
             // TODO: Construct the appropriate destination page and set its context appropriately
