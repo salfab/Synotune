@@ -23,10 +23,10 @@
   
   <Applications>
     <Application Id="App" 
-        Executable="seesharp.synotune.exe" 
-        EntryPoint="seesharp.synotune.App">
+        Executable="synotune.exe" 
+        EntryPoint="synotune.App">
         <VisualElements 
-            DisplayName="seesharp.synotune"
+            DisplayName="synotune"
             Logo="Images\Logo.png"
             SmallLogo="Images\SmallLogo.png"
             Description="seesharp.synotune"
