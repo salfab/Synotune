@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+  
+  <Identity Name="4d40f0ac-c5a3-4172-bebd-338a648758ba"
+            Publisher="CN=vladislav1664"
+            Version="1.0.0.0" />
+  
+  <Properties>
+    <DisplayName>seesharp.synotune</DisplayName>
+    <PublisherDisplayName>vladislav1664</PublisherDisplayName>
+    <Logo>Images\StoreLogo.png</Logo>
+    <Description>seesharp.synotune</Description>
+  </Properties>
+  
+  <Prerequisites>
+    <OSMinVersion>6.2</OSMinVersion>
+    <OSMaxVersionTested>6.2</OSMaxVersionTested>
+  </Prerequisites>
+  
+  <Resources>
+    <Resource Language="en-us"/>
+  </Resources>
+  
+  <Applications>
+    <Application Id="App" 
+        Executable="seesharp.synotune.exe" 
+        EntryPoint="seesharp.synotune.App">
+        <VisualElements 
+            DisplayName="seesharp.synotune"
+            Logo="Images\Logo.png"
+            SmallLogo="Images\SmallLogo.png"
+            Description="seesharp.synotune"
+            ForegroundText="light"
+            BackgroundColor="#222222">
+            <SplashScreen Image="Images\SplashScreen.png" />
+        </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

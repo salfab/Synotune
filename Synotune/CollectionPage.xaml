@@ -1,0 +1,232 @@
+﻿<UserControl x:Class="Synotune.CollectionPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:Behaviors="using:Synotune.Behaviors"
+             xmlns:Views="using:Synotune.Views"
+             Loaded="Page_Loaded" Unloaded="Page_Unloaded"
+             
+    mc:Ignorable="d"
+    d:DesignHeight="768" d:DesignWidth="1366" FontFamily="Segoe UI Symbol">
+
+    <UserControl.Resources>
+        <CollectionViewSource x:Name="CollectionViewSource" x:Key="CollectionViewSource" />
+        <Style x:Name="SearchType" TargetType="RadioButton">
+            <Setter Property="Background" Value="#FF448DCA"/> 
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="Padding" Value="0,0,0,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                             
+                           
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">                                        
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="CheckIcon" Storyboard.TargetProperty="Opacity" To="1"/>
+                                            
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="CheckIcon" Storyboard.TargetProperty="Opacity" To="0"/>
+                                            
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <!--<VisualStateGroup x:Name="FocusStates">
+                                    <VisualState x:Name="Focused">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ContentFocusVisualElement" Storyboard.TargetProperty="Opacity" Duration="0" To="1"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unfocused" />
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="ValidationStates">
+                                    <VisualState x:Name="Valid"/>
+                                    <VisualState x:Name="InvalidUnfocused">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ValidationErrorElement" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" >
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="InvalidFocused">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ValidationErrorElement" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" >
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <Visibility>Visible</Visibility>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="validationTooltip" Storyboard.TargetProperty="IsOpen">
+                                                <DiscreteObjectKeyFrame KeyTime="0" >
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <sys:Boolean>True</sys:Boolean>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>-->
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid>
+                                <ContentPresenter 
+                              Grid.Column="0"                            
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Margin="{TemplateBinding Padding}" />
+                                <Border Background="#01FFFFFF" BorderBrush="{StaticResource HighlightBrush}" BorderThickness="2" x:Name="CheckIcon" Margin="-2">
+                                    <Grid VerticalAlignment="Top" HorizontalAlignment="Right">
+                                        <Polygon Points="0,0 30,30 30,0" Fill="{StaticResource HighlightBrush}"   />
+                                        <TextBlock HorizontalAlignment="Right" FontFamily="Segoe UI Symbol" Margin="0,-1,-1,0" Text="" />
+                                    </Grid>
+
+                                </Border>
+                            </Grid>
+                        
+
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <!-- Page Content -->
+
+    <Grid x:Name="LayoutRoot" Style="{StaticResource LayoutRootGridStyle}" Background="Black" Behaviors:CharmDiscardedByPointerPressedEventToCommandBehavior.PointerPressedCommand="{Binding PointerPressedCommand}" PointerPressed="OnPointerPressed">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="OrientationStates">
+                <VisualState x:Name="Full"/>
+                <VisualState x:Name="Fill"/>
+                <VisualState x:Name="Portrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ItemGridView" Storyboard.TargetProperty="Visibility" >
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ItemListView" Storyboard.TargetProperty="Visibility" >
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Style" Storyboard.TargetName="BackButton">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnapBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Style" Storyboard.TargetName="PageTitle">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnapPageTitleStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="ItemTemplate" Storyboard.TargetName="ItemListView">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnapListItemTemplate}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="ItemsPanel" Storyboard.TargetName="ItemListView">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnapListItemsPanelTemplate}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ItemGridView" Storyboard.TargetProperty="Visibility" >
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ItemListView" Storyboard.TargetProperty="Visibility" >
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="BackButton" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="PageTitle" Text="{StaticResource AppName}" Style="{StaticResource PageTitleStyle}" Grid.Column="1" />
+        </Grid>
+
+        <Grid HorizontalAlignment="Center" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="6*" />
+                <RowDefinition Height="4*"  />
+            </Grid.RowDefinitions>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <RadioButton Margin="0,0,5,0" IsChecked="True" Style="{StaticResource SearchType}">
+                    <Grid>
+                        <Image  Source="/images/Album.png" Tag="Album" />
+                        <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#BBFFFFFF">
+                            <TextBlock Margin="5" Foreground="Black" Text="Album" />
+                        </Border>
+                    </Grid>
+                </RadioButton>
+                <RadioButton Margin="5,0" Style="{StaticResource SearchType}">
+                    <Grid>
+                        <Image Source="/images/Artist.png"/>
+                        <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#BBFFFFFF">
+                            <TextBlock Margin="5" Foreground="Black" Text="Artist" />
+                        </Border>
+                    </Grid>
+                </RadioButton>
+                <RadioButton Margin="5,0" Style="{StaticResource SearchType}">
+                    <Grid>
+                        <Image Source="/images/Track.png" />
+                        <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#BBFFFFFF">
+                            <TextBlock Margin="5" Foreground="Black" Text="Track" />
+                        </Border>
+                    </Grid>
+                </RadioButton>
+                <RadioButton Margin="0,0,5,0"  Style="{StaticResource SearchType}">
+                    <Grid>
+                        <Image Source="/images/Infinity.png"/>
+                        <Border HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Background="#BBFFFFFF">
+                            <TextBlock Margin="5" Foreground="Black" Text="All Music" />
+                        </Border>
+                    </Grid>
+                </RadioButton>
+            </StackPanel>
+            <Grid Grid.Row="1">
+                <TextBox Behaviors:TextBoxHelper.ValidatedSearchQueryCommand="{Binding ValidatedSearchQueryCommand}"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="-3,20,5,0" FontSize="24"  />
+            </Grid>
+
+        </Grid>
+
+        <!--<ApplicationBar Grid.Row="1" Background="#55FFFFFF" IsOpen="True"  VerticalAlignment="Bottom">
+        
+            <ApplicationBar.Content>
+                <Button HorizontalAlignment="Right">Settings</Button>
+            </ApplicationBar.Content>
+        </ApplicationBar>-->
+        <Views:SettingsView Grid.RowSpan="2" x:Name="SettingPanel" HorizontalAlignment="Right" Margin="0,0,-346,0" SettingsChanged="{Binding SettingsChangedCommand, Mode=TwoWay}" Username="{Binding Username}" Password="{Binding Password}"  Hostname="{Binding Hostname}" Port="{Binding Port}"  Behaviors:LoadingDefaultSettingsEventToCommandBehavior.LoadingDefaultSettingsCommand="{Binding LoadingDefaultSettingsCommand}">
+            <Views:SettingsView.Transitions>
+                <TransitionCollection>
+                    <RepositionThemeTransition />
+                </TransitionCollection>
+            </Views:SettingsView.Transitions>
+        </Views:SettingsView>
+
+    </Grid>
+
+</UserControl>
