@@ -156,7 +156,11 @@ namespace Synology.AudioStationApi
             string postString = string.Format(@"sort=title&dir=ASC&action=browse&target=musiclib_music_aa&server=musiclib_music_aa&category=&keyword={0}&start=0&limit={1}", pattern, limit);
             byte[] postBytes = System.Text.Encoding.UTF8.GetBytes(postString);
 
-            request.BeginGetRequestStream(ar =>
+            
+
+            var asyncResult = request.BeginGetRequestStream(null , request);
+
+            Task t = Task.Factory.FromAsync(asyncResult, (ar) => 
                 {
                     // Just make sure we retrieve the right web request : no access to modified closure.
                     HttpWebRequest webRequest = (HttpWebRequest)ar.AsyncState;
@@ -165,72 +169,75 @@ namespace Synology.AudioStationApi
                     requestStream.Write(postBytes, 0, postBytes.Length);
                     requestStream.Dispose();
 
-                    request.BeginGetResponse(
-                        responseAr =>
+                    var getResponseAr = request.BeginGetResponse(null, webRequest);
+                    Task getResponseTask = Task.Factory.FromAsync(getResponseAr, (responseAr) =>
+                    {
+                        // Just make sure we retrieve the right web request : no access to modified closure.                        
+                        var httpWebRequest = responseAr.AsyncState;
+                        if (!webRequest.HaveResponse)
                         {
-                            // Just make sure we retrieve the right web request : no access to modified closure.                        
-                            var httpWebRequest = responseAr.AsyncState;
-                            if (!webRequest.HaveResponse)
-                            {
-                                throw new SynoSearchException("Error connecting to search engine", null);
-                                // FIXME : Use an error handling service
-                                //var action = new Action(() =>MessageBox.Show("Error connecting to search engine", "Connection error",MessageBoxButton.OK));   
+                            throw new SynoSearchException("Error connecting to search engine", null);
+                            // FIXME : Use an error handling service
+                            //var action = new Action(() =>MessageBox.Show("Error connecting to search engine", "Connection error",MessageBoxButton.OK));   
 
-                                //if (Deployment.Current.CheckAccess())
-                                //{
-                                //    action();
-                                //}
-                                //else
-                                //{
-                                //    Deployment.Current.Dispatcher.BeginInvoke(action);
-                                //}
-                                return;
-                            }
-                            var webResponse = webRequest.EndGetResponse(responseAr);
-                            
-                            var responseStream = webResponse.GetResponseStream();
-
-                            if (webResponse.Headers["Content-Encoding"].Contains("gzip"))
-                                responseStream = new GZipStream(responseStream, CompressionMode.Decompress);
-                            else if (webResponse.Headers["Content-Encoding"].Contains("deflate"))
-                                responseStream = new DeflateStream(responseStream, CompressionMode.Decompress);
-
-                            StreamReader reader = new StreamReader(responseStream);
-
-                            var content = reader.ReadToEnd();
-
-                            long count;
-                            IEnumerable<SynoItem> artists;
-                            SynologyJsonDeserializationHelper.ParseSynologyArtists(content, out artists, out count, urlBase);
-
-
-
-                            //var isOnUiThread = Windows.Management.Deployment.Current.Dispatcher.CheckAccess();
-                            //if (isOnUiThread)
+                            //if (Deployment.Current.CheckAccess())
                             //{
-                            //    if (count > limit)
-                            //    {
-                            //        // FIXME : Use an error handling service
-                            //        MessageBox.Show(string.Format("number of available artists ({0}) exceeds supported limit ({1})", count, limit));
-                            //    }
-                            //    callback(artists);
+                            //    action();
                             //}
                             //else
                             //{
-                            //    Windows.Management.Deployment.Current.Dispatcher.BeginInvoke(() =>
-                            //        {
-                            //            if (count > limit)
-                            //            {
-                            //                // FIXME : Use an error handling service
-                            //                MessageBox.Show(string.Format("number of available artists ({0}) exceeds supported limit ({1})", count, limit));
-                            //            }
-                                        callback(artists);
-                            //        });
+                            //    Deployment.Current.Dispatcher.BeginInvoke(action);
                             //}
-                        },
-                        webRequest);
+                            return;
+                        }
+                        var webResponse = webRequest.EndGetResponse(responseAr);
+
+                        var responseStream = webResponse.GetResponseStream();
+
+                        if (webResponse.Headers["Content-Encoding"].Contains("gzip"))
+                            responseStream = new GZipStream(responseStream, CompressionMode.Decompress);
+                        else if (webResponse.Headers["Content-Encoding"].Contains("deflate"))
+                            responseStream = new DeflateStream(responseStream, CompressionMode.Decompress);
+
+                        StreamReader reader = new StreamReader(responseStream);
+
+                        var content = reader.ReadToEnd();
+
+                        long count;
+                        IEnumerable<SynoItem> artists;
+                        SynologyJsonDeserializationHelper.ParseSynologyArtists(content, out artists, out count, urlBase);
+
+
+
+                        //var isOnUiThread = Windows.Management.Deployment.Current.Dispatcher.CheckAccess();
+                        //if (isOnUiThread)
+                        //{
+                        //    if (count > limit)
+                        //    {
+                        //        // FIXME : Use an error handling service
+                        //        MessageBox.Show(string.Format("number of available artists ({0}) exceeds supported limit ({1})", count, limit));
+                        //    }
+                        //    callback(artists);
+                        //}
+                        //else
+                        //{
+                        //    Windows.Management.Deployment.Current.Dispatcher.BeginInvoke(() =>
+                        //        {
+                        //            if (count > limit)
+                        //            {
+                        //                // FIXME : Use an error handling service
+                        //                MessageBox.Show(string.Format("number of available artists ({0}) exceeds supported limit ({1})", count, limit));
+                        //            }
+                        callback(artists);
+                        //        });
+                        //}
+                    },
+                    TaskCreationOptions.None, 
+                    TaskScheduler.FromCurrentSynchronizationContext()
+                    );
+
                 },
-                request);
+                TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
 
             //CookieAwareWebClient wc = new CookieAwareWebClient();
 
