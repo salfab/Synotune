@@ -17,7 +17,7 @@ namespace Synotune.Views
             InitializeComponent();
         }
 
-        public ArtistSearchResults(ArtistSearchResultsViewModel viewModel)
+        public ArtistSearchResults(ArtistSearchResultsViewModel viewModel) : this()
         {
             // TODO: Complete member initialization
             this.DataContext = viewModel;

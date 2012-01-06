@@ -12,20 +12,42 @@ namespace OpenSyno.WinRT
         {
 
             JsonObject jObject = new JsonObject(result);
-            artists = null;
-            artists = from album in jObject["items"].GetArray()
-                      select new SynoItem
+            artists = new List<SynoItem>();
+
+            JsonArray jsonArtists = jObject["items"].GetArray();
+
+            for (int i = 0; i < jsonArtists.Count; i++)
+            {
+
+          
+                var synoArtist = new SynoItem
                       {
-                          AlbumArtUrl = BuildAbsoluteAlbumArtUrl(urlBase, album.GetObject()["albumArtURL"].GetString()),
-                          Icon = album.GetObject()["icon"].GetString(),
-                          IsContainer = album.GetObject()["is_container"].GetBoolean(),
-                          IsTrack = album.GetObject()["is_track"].GetBoolean(),
-                          ItemID = album.GetObject()["item_id"].GetString(),
-                          ItemPid = album.GetObject()["item_pid"].GetString(),
-                          Sequence = (int)album.GetObject()["sequence"].GetNumber(),
-                          Support = album.GetObject()["support"].GetBoolean(),
-                          Title = album.GetObject()["title"].GetString()
+                          AlbumArtUrl = BuildAbsoluteAlbumArtUrl(urlBase, jsonArtists[i].GetObject()["albumArtURL"].GetString()),
+                          Icon = jsonArtists[i].GetObject()["icon"].GetString(),
+                          IsContainer = jsonArtists[i].GetObject()["is_container"].GetBoolean(),
+                          IsTrack = jsonArtists[i].GetObject()["is_track"].GetBoolean(),
+                          ItemID = jsonArtists[i].GetObject()["item_id"].GetString(),
+                          ItemPid = jsonArtists[i].GetObject()["item_pid"].GetString(),
+                          Sequence = (int)jsonArtists[i].GetObject()["sequence"].GetNumber(),
+                          Support = jsonArtists[i].GetObject()["support"].GetBoolean(),
+                          Title = jsonArtists[i].GetObject()["title"].GetString()
                       };
+                ((List<SynoItem>)artists).Add(synoArtist);
+            }
+
+            //artists = (from album in albums
+            //          select new SynoItem
+            //          {
+            //              //AlbumArtUrl = BuildAbsoluteAlbumArtUrl(urlBase, album.GetObject()["albumArtURL"].GetString()),
+            //              //Icon = album.GetObject()["icon"].GetString(),
+            //              //IsContainer = album.GetObject()["is_container"].GetBoolean(),
+            //              //IsTrack = album.GetObject()["is_track"].GetBoolean(),
+            //              //ItemID = album.GetObject()["item_id"].GetString(),
+            //              //ItemPid = album.GetObject()["item_pid"].GetString(),
+            //              //Sequence = (int)album.GetObject()["sequence"].GetNumber(),
+            //              //Support = album.GetObject()["support"].GetBoolean(),
+            //              Title = album.GetObject()["title"].GetString()
+            //          }).ToArray();
             total = (long)jObject["total"].GetNumber();
         }
 

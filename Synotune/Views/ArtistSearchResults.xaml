@@ -520,9 +520,17 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
           </Grid.RowDefinitions>
-          <TextBlock x:Name="Title" Text="{Binding Subtitle}" Style="{StaticResource LargeContentFontStyle}"/>
+                    
+           <TextBlock x:Name="Title" Text="{Binding Subtitle}" Style="{StaticResource LargeContentFontStyle}"/>
           <Image x:Name="Image" Height="240" Margin="0,21,0,0" Grid.Row="1" Stretch="UniformToFill" Source="{Binding Image}"/>
-          <TextBlock x:Name="DescriptionText" Grid.Row="2" Text="{Binding Description}" Style="{StaticResource SmallContentFontStyle}" Margin="0,10,0,0" VerticalAlignment="Top"/>
+                    <ListView Margin="0,21,0,0" Grid.Row="1" ItemsSource="{Binding Artists}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Title}"/>                                    
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <TextBlock x:Name="DescriptionText" Grid.Row="2" Text="{Binding Description}" Style="{StaticResource SmallContentFontStyle}" Margin="0,10,0,0" VerticalAlignment="Top"/>
         </Grid>
         <GridView x:Name="ItemGridView" ItemsSource="{Binding Source={StaticResource CollectionViewSource}}" Background="{StaticResource PageBackgroundBrush}"
                   ItemTemplate="{StaticResource ListItemTemplate}" ItemContainerStyle="{StaticResource ListTileStyle}" ItemsPanel="{StaticResource GridItemsPanelTemplate}"

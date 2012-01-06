@@ -5,6 +5,8 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Synology.AudioStationApi;
+using Windows.UI.Core;
+using System.Collections.Generic;
 
 namespace Synotune
 {
@@ -45,11 +47,12 @@ namespace Synotune
             Window.Current.Content = page;
         }
 
-        internal static void ShowArtistSearchResults(System.Collections.Generic.IEnumerable<SynoItem> items)
+        internal static void ShowArtistSearchResults(IEnumerable<SynoItem> items)
         {
             var viewModel = new ArtistSearchResultsViewModel(items);
             var page = new ArtistSearchResults(viewModel);
             Window.Current.Content = page;
+
         }
     }
 }
