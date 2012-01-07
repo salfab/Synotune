@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using Synology.AudioStationApi;
 using Windows.UI.Xaml.Data;
 
 namespace Synotune.ViewModels
@@ -19,9 +20,16 @@ namespace Synotune.ViewModels
             }            
         }
 
+        public AlbumViewModel(SynoItem album)
+        {
+            Album = album;
+        }
+
         public new IEnumerator<object> GetEnumerator()
         {
             return (System.Collections.Generic.IEnumerator<object>)base.GetEnumerator();
         }
+
+        public SynoItem Album { get; set; }
     }
 }

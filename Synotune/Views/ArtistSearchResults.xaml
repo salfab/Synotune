@@ -373,10 +373,10 @@
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Border Style="{StaticResource ImagePlaceHolderStyle}" Margin="8,8,0,8" Width="116" Height="116" HorizontalAlignment="Left" VerticalAlignment="Top">
-          <Image Source="{Binding Image}" Margin="0" Stretch="UniformToFill"/>
+                    <Image Source="{Binding Album.AlbumArtUrl, Converter={StaticResource UrlToBitmapImageConverter}}" Margin="0" Stretch="UniformToFill"/>
         </Border>
         <StackPanel Grid.Column="1" Style="{StaticResource MoCoContentTextStackPanelStyle}" HorizontalAlignment="Left" Margin="12,8,8,8">
-          <TextBlock TextTrimming="WordEllipsis" Text="{Binding Title}" Style="{StaticResource NonWrappingSmallContentTextStyle}" Width="360" Height="20"/>
+          <TextBlock TextTrimming="WordEllipsis" Text="{Binding Album.Title}" Style="{StaticResource NonWrappingSmallContentTextStyle}" Width="360" Height="20"/>
           <TextBlock Text="{Binding Subtitle}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Style="{StaticResource SubHeaderTextStyle}" Width="300" Height="20" Margin="0,3,20,0"/>
           <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Style="{StaticResource SmallContentFontStyle}" Width="360" Height="64"/>
         </StackPanel>
@@ -517,22 +517,22 @@
         <Grid x:Name="HeaderTitlePanel" Width="480">
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
           </Grid.RowDefinitions>
                     
            <TextBlock x:Name="Title" Text="{Binding Subtitle}" Style="{StaticResource LargeContentFontStyle}"/>
-          <Image x:Name="Image" Height="240" Margin="0,21,0,0" Grid.Row="1" Stretch="UniformToFill" Source="{Binding Image}"/>
-                    <ListView Margin="0,21,0,0" Grid.Row="1" ItemsSource="{Binding Artists}">
+          <!--<Image x:Name="Image" Height="240" Margin="0,21,0,0" Grid.Row="1" Stretch="UniformToFill" Source="{Binding Image}"/>-->
+                    <ListView x:Name="ArtistsList" Margin="0,21,0,0" Grid.Row="1" ItemsSource="{Binding Artists}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Title}"/>                                    
+                                <TextBlock Text="{Binding Artist.Title}"/>                                    
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
                     <TextBlock x:Name="DescriptionText" Grid.Row="2" Text="{Binding Description}" Style="{StaticResource SmallContentFontStyle}" Margin="0,10,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <GridView x:Name="ItemGridView" ItemsSource="{Binding Source={StaticResource CollectionViewSource}}" Background="{StaticResource PageBackgroundBrush}"
+                <GridView x:Name="ItemGridView" ItemsSource="{Binding ElementName=ArtistsList, Path=SelectedItem.Albums}" Background="{StaticResource PageBackgroundBrush}"
                   ItemTemplate="{StaticResource ListItemTemplate}" ItemContainerStyle="{StaticResource ListTileStyle}" ItemsPanel="{StaticResource GridItemsPanelTemplate}"
                   BorderThickness="0" VerticalAlignment="Stretch" SelectionChanged="ItemView_SelectionChanged"/>
         <ListView x:Name="ItemListView" ItemsSource="{Binding Source={StaticResource CollectionViewSource}}" Visibility="Collapsed" Margin="0,10,0,0" Grid.Row="1" Background="{StaticResource PageBackgroundBrush}"

@@ -12,9 +12,9 @@ namespace Synotune
         public SplitPageViewModel()
         {
             Artists = new ObservableCollection<ArtistViewModel>();
-            Artists.Add(new ArtistViewModel() { Name = "Bob" });
-            Artists.Add(new ArtistViewModel() { Name = "Ralph" });
-            Artists.Add(new ArtistViewModel() { Name = "Noah" });
+            Artists.Add(new ArtistViewModel(null) { Name = "Bob" });
+            Artists.Add(new ArtistViewModel(null) { Name = "Ralph" });
+            Artists.Add(new ArtistViewModel(null) { Name = "Noah" });
 
             SearchCriteria = "Role";
 

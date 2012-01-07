@@ -27,6 +27,73 @@ namespace Synology.AudioStationApi
         [DataMember]
         public string Token { get; set; }
 
+        public Task<IEnumerable<SynoItem>> GetAlbumsForArtistAsync(SynoItem artist) 
+        {
+            var tcs = new TaskCompletionSource<IEnumerable<SynoItem>>(artist);            
+            string urlBase = string.Format("http://{0}:{1}", this.Host, this.Port);            
+            var url = urlBase + "/webman/modules/AudioStation/webUI/audio_browse.cgi"; 
+            HttpWebRequest request = BuildRequest(url);  
+            int limit = 100;
+
+            string urlEncodedItemId = System.Uri.EscapeDataString(artist.ItemID);
+            string postString = string.Format(@"action=browse&target={0}&server=musiclib_music_aa&category=&keyword=&start=0&sort=title&dir=ASC&limit={1}", urlEncodedItemId, limit);     
+            byte[] postBytes = System.Text.Encoding.UTF8.GetBytes(postString);  
+            var requestStreamAr = request.BeginGetRequestStream(ar => 
+            {           
+                // Just make sure we retrieve the right web request : no access to modified closure.
+                HttpWebRequest webRequest = (HttpWebRequest)ar.AsyncState;
+                var requestStream = webRequest.EndGetRequestStream(ar);
+                
+                requestStream.Write(postBytes, 0, postBytes.Length);                 
+                
+
+                var getResponseAr = webRequest.BeginGetResponse( 
+                    responseAr =>         
+                    {                  
+                        // Just make sure we retrieve the right web request : no access to modified closure. 
+                        var httpWebRequest = responseAr.AsyncState; 
+                        var webResponse = webRequest.EndGetResponse(responseAr);                 
+                        var responseStream = webResponse.GetResponseStream();
+
+                        if (webResponse.Headers["Content-Encoding"].Contains("gzip"))
+                            responseStream = new GZipStream(responseStream, CompressionMode.Decompress);
+                        else if (webResponse.Headers["Content-Encoding"].Contains("deflate"))
+                            responseStream = new DeflateStream(responseStream, CompressionMode.Decompress);
+
+                        StreamReader reader = new StreamReader(responseStream);
+
+                        var content = reader.ReadToEnd();                 
+                        long count;                       
+                        IEnumerable<SynoItem> albums;   
+                        SynologyJsonDeserializationHelper.ParseSynologyAlbums(content, out albums, out count, urlBase); 
+                        //var isOnUiThread = Deployment.Current.Dispatcher.CheckAccess();  
+                        //if (isOnUiThread)             
+                        //{                          
+                        //    if (count > limit)      
+                        //    {                           
+                        //        // MessageBox.Show(string.Format("number of available artists ({0}) exceeds supported limit ({1})", count, limit));  
+                        //    }    
+                        //    tcs.SetResult(albums);
+                        //    // callback(tracks);     
+                        //}               
+                        //else              
+                        //{           
+                        //    Deployment.Current.Dispatcher.BeginInvoke( 
+                        //        () =>          
+                        //        {                       
+                        //            if (count > limit)      
+                        //            {             
+                        //                // MessageBox.Show(string.Format("number of available artists ({0}) exceeds supported limit ({1})", count, limit));
+                        //            }          
+                        tcs.SetResult(albums);    
+                        //        });             
+                        //}                
+                    },            
+                    webRequest);     
+            }, request);       
+
+            return tcs.Task;        }
+
         public void LoginAsync(string login, string password, Action<string> callback, Action<Exception> callbackError, bool useSsl)
         {
             if (login == null) throw new ArgumentNullException("login");
@@ -188,7 +255,7 @@ namespace Synology.AudioStationApi
                             //{
                             //    Deployment.Current.Dispatcher.BeginInvoke(action);
                             //}
-                            return;
+                            //return;
                         }
                         var webResponse = webRequest.EndGetResponse(responseAr);
 

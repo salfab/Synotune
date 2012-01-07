@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using Synology.AudioStationApi;
 using Synotune.ViewModels;
 
 namespace Synotune
@@ -12,12 +13,12 @@ namespace Synotune
         public string Name { get; set; }
 
         public ObservableCollection<AlbumViewModel> Albums { get; set; }
+        public SynoItem Artist { get; set; }
 
-        public ArtistViewModel()
+        public ArtistViewModel(SynoItem synoItem)
         {
-            Albums = new ObservableCollection<AlbumViewModel>();
-            Albums.Add(new AlbumViewModel { Title = "1" });
-            Albums.Add(new AlbumViewModel { Title = "2" });
+            Artist = synoItem;
+
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Synotune
         private void OnValidatedSearchQuery()
         {
             // if artist is selected
-            this.session.SearchArtist("tom waits" ,(items) => 
+            this.session.SearchArtist("tom" ,(items) => 
                 {
                     // todo : use an injected service instead.
                     App.ShowArtistSearchResults(items);
