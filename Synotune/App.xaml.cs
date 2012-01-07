@@ -57,7 +57,7 @@ namespace Synotune
             foreach (var viewModel in albumViewModels)
             {
                 var getAlbumsTask = App.audioStationSession.GetAlbumsForArtistAsync(viewModel.Artist);
-
+                // TODO : instead of writing the strategy here, we could call a delegate which would then be changeable : this would enable alternative search scenarios for limited bandwidth scenarios.
                 getAlbumsTask.ContinueWith(task => albumViewModels.Single(o=>o.Artist == task.AsyncState).Albums = new ObservableCollection<AlbumViewModel>(task.Result.Select(o => new AlbumViewModel(o))));
             } 
             var artistSearchViewModel = new ArtistSearchResultsViewModel(albumViewModels);
